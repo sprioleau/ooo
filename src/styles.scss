@@ -1,0 +1,67 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  padding: 1rem 0;
+  font-family: sans-serif;
+  text-align: center;
+  height: 100%;
+  min-height: 100dvh;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  font-family: Avenir;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+}
+
+.pieces {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  width: min-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1em;
+}
+
+.piece {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    --size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size);
+    height: var(--size);
+    padding: 0.25em;
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    border-radius: 0.25em;
+  }
+}
+
+.symbol {
+  animation: spin calc(12s + (var(--rotation-speed) * 1s)) infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
