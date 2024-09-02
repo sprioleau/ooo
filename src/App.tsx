@@ -1,6 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-const backgroundColors = ["limegreen", "dodgerblue", "pink"];
+const backgroundColors = [  
+  "#ffd074ff",
+  "#fba17dff",
+  "#ff8b87ff",
+  "#ffa6c8ff",
+  "#e1aaf2ff",
+  "#b7b4f6ff",
+];
 
 function getRandomPuzzleSize() {
   const puzzleSizes = [
@@ -24,6 +31,25 @@ const puzzlePairs = [
   ["2", "Z"],
   ["h", "n"],
   ["C", "G"],
+  ["😀", "😄"],
+  ["😁", "😄"],
+  ["😅", "🥲"],
+  ["😛", "😜"],
+  ["🤪", "😜"],
+  ["🤭", "🫢"],
+  ["😐", "😑"],
+  ["😈", "👿"],
+  ["🙈", "🙉"],
+  ["🖐️", "🖖"],
+  ["🤟", "🤘"],
+  ["🐪", "🐫"],
+  ["☘️", "🍀"],
+  ["🍊", "🍑"],
+  ["🌎", "🌍"],
+  ["⌛", "⏳"],
+  ["⛄", "☃️"],
+  ["🔉", "🔊"],
+  ["📫", "📪"],
 ];
 
 function pickRandomFromArray<T>(array: T[]) {
@@ -81,42 +107,48 @@ export default function App() {
     <div
       className="app"
       style={{
-        backgroundColor: backgroundColors[Math.floor(Math.random() * 3)],
+        backgroundColor: pickRandomFromArray(backgroundColors),
       }}
     >
-      <h1>Odd one out</h1>
-      <p>Points: {points}</p>
-      <ul
-        className="pieces"
-        style={
-          {
-            "--columns": board.size,
-          } as React.CSSProperties
-        }
-      >
-        {board.board.map((piece) => (
-          <li
-            key={piece.id}
-            className="piece"
-            // style={{
-            //   ...(piece.isSolution && { backgroundColor: "rebeccapurple" }),
-            // }}
-          >
-            <button onClick={() => handleSelectPiece(piece)}>
-              <span
-                className="symbol"
-                style={
-                  {
-                    "--rotation-speed": Math.ceil(Math.random() * 5),
-                  } as React.CSSProperties
-                }
-              >
-                {piece.symbol}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <header>
+        <h1>Odd one out</h1>
+        <p>Points: {points}</p>
+      </header>
+      <main>
+        <ul
+          className="pieces"
+          style={
+            {
+              "--columns": board.size,
+            } as React.CSSProperties
+          }
+        >
+          {board.board.map((piece) => (
+            <li
+              key={piece.id}
+              className="piece"
+              // style={{
+              //   ...(piece.isSolution && { backgroundColor: "rebeccapurple" }),
+              // }}
+            >
+              <button onClick={() => handleSelectPiece(piece)}>
+                <span
+                  className="symbol"
+                  style={
+                    {
+                      "--rotation-speed": 12 + Math.ceil(Math.random() * 5),
+                      ...(["i", "!"].includes(piece.symbol) && piece.isSolution && { fontFamily: "serif" }),
+                      ...(["6", "9"].includes(piece.symbol) && piece.isSolution && { fontFamily: "serif" }),
+                    } as React.CSSProperties
+                  }
+                >
+                  {piece.symbol}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   );
 }
