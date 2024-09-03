@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import useMousePosition from "./hooks/useMousePosition";
 
-const backgroundColors = [  
+const backgroundColors = [
   "#ffd074ff",
   "#fba17dff",
   "#ff8b87ff",
@@ -12,8 +13,8 @@ const backgroundColors = [
 function getRandomPuzzleSize() {
   const puzzleSizes = [
     { name: "small", size: 8 },
-    { name: "medium", size: 12 },
-    { name: "large", size: 16 },
+    { name: "medium", size: 10 },
+    { name: "large", size: 12 },
   ];
 
   return pickRandomFromArray(puzzleSizes)["size"];
@@ -80,19 +81,74 @@ function generateGameBoard({
   }));
 
   // Select solution piece and add property to uniquely identify it
-  const randomIndex = Math.floor(Math.random() * pieces);
-  board[randomIndex] = {
-    ...board[randomIndex],
+  const solutionId = Math.floor(Math.random() * pieces);
+  board[solutionId] = {
+    ...board[solutionId],
     symbol: solutionSymbol,
     isSolution: true,
   };
 
-  return { board, size };
+  return { board, size, solutionId };
 }
 
 export default function App() {
   const [points, setPoints] = useState(0);
-  const [board, setBoard] = useState(generateGameBoard({}));
+  const [solutionCoordinates, setSolutionCoordinates] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  // const [distance, setDistance] = useState<number | undefined>();
+  const [{ board, size, solutionId }, setGameBoard] = useState(
+    generateGameBoard({})
+  );
+
+  const { x: mouseX, y: mouseY } = useMousePosition();
+
+  const distance =
+    solutionCoordinates && mouseX && mouseY
+      ? Math.sqrt(
+          (mouseY - solutionCoordinates.y) ** 2 +
+            (mouseX - solutionCoordinates.x) ** 2
+        )
+      : null;
+
+  console.log({ distance });
+
+  useEffect(() => {
+    // TODO: Use a ref instead
+    const solutionElement = document.querySelector(
+      `[data-id="${solutionId}"]`
+    ) as HTMLLIElement;
+
+    if (!solutionElement) return;
+
+    const { left, top, width, height } =
+      solutionElement.getBoundingClientRect();
+
+    const center = {
+      x: left + 0.5 * width,
+      y: top + 0.5 * height,
+    };
+
+    const indicator = document.createElement("div");
+    indicator.style.backgroundColor = "red";
+    indicator.style.position = "absolute";
+    indicator.style.width = 20 + "px";
+    indicator.style.height = 20 + "px";
+    indicator.style.left = center.x + "px";
+    indicator.style.top = center.y + "px";
+    indicator.style.transform = "translate(-50%, -50%)";
+    indicator.style.borderRadius = "50%";
+    indicator.classList.add("center-mark");
+
+    document.body.appendChild(indicator);
+
+    setSolutionCoordinates(center);
+
+    return () => {
+      document.body.removeChild(indicator);
+    };
+  }, [solutionId]);
 
   function handleSelectPiece({
     isSolution,
@@ -100,7 +156,7 @@ export default function App() {
     if (!isSolution) return;
 
     setPoints((p) => p + 1);
-    setBoard(generateGameBoard({}));
+    setGameBoard(generateGameBoard({}));
   }
 
   return (
@@ -119,14 +175,15 @@ export default function App() {
           className="pieces"
           style={
             {
-              "--columns": board.size,
+              "--columns": size,
             } as React.CSSProperties
           }
         >
-          {board.board.map((piece) => (
+          {board.map((piece) => (
             <li
               key={piece.id}
               className="piece"
+              data-id={piece.id}
               // style={{
               //   ...(piece.isSolution && { backgroundColor: "rebeccapurple" }),
               // }}
@@ -137,8 +194,10 @@ export default function App() {
                   style={
                     {
                       "--rotation-speed": 12 + Math.ceil(Math.random() * 5),
-                      ...(["i", "!"].includes(piece.symbol) && piece.isSolution && { fontFamily: "serif" }),
-                      ...(["6", "9"].includes(piece.symbol) && piece.isSolution && { fontFamily: "serif" }),
+                      ...(["i", "!"].includes(piece.symbol) &&
+                        piece.isSolution && { fontFamily: "serif" }),
+                      ...(["6", "9"].includes(piece.symbol) &&
+                        piece.isSolution && { fontFamily: "serif" }),
                     } as React.CSSProperties
                   }
                 >
