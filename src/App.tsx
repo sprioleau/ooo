@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import useMousePosition from "./hooks/useMousePosition";
+import React, { useState } from "react";
+import HotColdSlider from "./components/HotColdSlider";
 
 const backgroundColors = [
   "#ffd074ff",
@@ -93,62 +93,9 @@ function generateGameBoard({
 
 export default function App() {
   const [points, setPoints] = useState(0);
-  const [solutionCoordinates, setSolutionCoordinates] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  // const [distance, setDistance] = useState<number | undefined>();
   const [{ board, size, solutionId }, setGameBoard] = useState(
     generateGameBoard({})
   );
-
-  const { x: mouseX, y: mouseY } = useMousePosition();
-
-  const distance =
-    solutionCoordinates && mouseX && mouseY
-      ? Math.sqrt(
-          (mouseY - solutionCoordinates.y) ** 2 +
-            (mouseX - solutionCoordinates.x) ** 2
-        )
-      : null;
-
-  console.log({ distance });
-
-  useEffect(() => {
-    // TODO: Use a ref instead
-    const solutionElement = document.querySelector(
-      `[data-id="${solutionId}"]`
-    ) as HTMLLIElement;
-
-    if (!solutionElement) return;
-
-    const { left, top, width, height } =
-      solutionElement.getBoundingClientRect();
-
-    const center = {
-      x: left + 0.5 * width,
-      y: top + 0.5 * height,
-    };
-
-    const indicator = document.createElement("div");
-    indicator.style.backgroundColor = "red";
-    indicator.style.position = "absolute";
-    indicator.style.width = 20 + "px";
-    indicator.style.height = 20 + "px";
-    indicator.style.left = center.x + "px";
-    indicator.style.top = center.y + "px";
-    indicator.style.transform = "translate(-50%, -50%)";
-    indicator.style.borderRadius = "50%";
-    indicator.classList.add("center-mark");
-
-    document.body.appendChild(indicator);
-
-    setSolutionCoordinates(center);
-
-    return () => {
-      document.body.removeChild(indicator);
-    };
-  }, [solutionId]);
 
   function handleSelectPiece({
     isSolution,
@@ -207,6 +154,7 @@ export default function App() {
             </li>
           ))}
         </ul>
+        <HotColdSlider solutionId={solutionId} />
       </main>
     </div>
   );

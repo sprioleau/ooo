@@ -1,10 +1,10 @@
 /* red-hat-display-700 - latin */
 @font-face {
-  font-display: swap; 
-  font-family: 'Red Hat Display';
+  font-display: swap;
+  font-family: "Red Hat Display";
   font-style: normal;
   font-weight: 700;
-  src: url('/fonts/red-hat-display-latin-700.woff2') format('woff2');
+  src: url("/fonts/red-hat-display-latin-700.woff2") format("woff2");
 }
 
 * {
@@ -101,4 +101,8 @@ li {
   to {
     transform: rotate(360deg);
   }
+}
+
+input[type="range"] + label {
+  font-size: 2em;
 }
