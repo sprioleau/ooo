@@ -50,7 +50,6 @@ li {
 
 .pieces {
   display: grid;
-  gap: 0.5rem;
   grid-template-rows: auto;
   grid-template-columns: repeat(var(--columns), 1fr);
   width: min-content;
@@ -64,8 +63,14 @@ li {
   align-items: center;
   justify-content: center;
 
+  &:hover button {
+    background-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.1);
+  }
+
   button {
     --size: 1.5em;
+    margin: 0.25em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -82,11 +87,6 @@ li {
     transition: 0.25s ease-out;
     transition-property: background-color transform;
     user-select: none;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.6);
-      transform: scale(1.1);
-    }
   }
 }
 
@@ -103,6 +103,24 @@ li {
   }
 }
 
-input[type="range"] + label {
+.hot-cold-slider {
+  --height: 4px;
+  margin: 4em;
+  position: relative;
+  background: rgba(81, 0, 255, 0.3);
+  height: var(--height);
+  border-radius: var(--height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.temperature-symbol {
+  --size: 2em;
   font-size: 2em;
+  left: var(--translateX);
+  position: absolute;
+  transform: translateX(-50%) scale(var(--scale));
+  transition: transform 0.15s ease-in-out;
 }

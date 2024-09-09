@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useMousePosition from "../hooks/useMousePosition";
 
 type Position = {
@@ -77,18 +77,29 @@ export default function HotColdSlider({ solutionId }: { solutionId: number }) {
 
   const temperature = getTemperatureFromDistance(distance);
   const maxDistance = minimumWindowDimension;
-  const rangeValue = maxDistance - distance;
+  const rangeValue = (maxDistance - distance).toFixed(1);
+  const rangePercentage = (
+    (100 * (maxDistance - distance)) /
+    maxDistance
+  ).toFixed(1);
+  const scaleFactor = 0.75;
+  const scale = (1 + (Number(rangeValue) / maxDistance) * scaleFactor).toFixed(
+    1
+  );
 
   return (
-    <>
-      <input
-        type="range"
-        id="hot-cold"
-        min="0"
-        max={maxDistance}
-        value={rangeValue}
-      />
-      <label htmlFor="hot-cold">{temperature}</label>
-    </>
+    <div className="hot-cold-slider">
+      <div
+        className="temperature-symbol"
+        style={
+          {
+            "--translateX": `${rangePercentage}%`,
+            "--scale": scale,
+          } as React.CSSProperties
+        }
+      >
+        {temperature}
+      </div>
+    </div>
   );
 }
