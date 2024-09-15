@@ -19,6 +19,10 @@
 
 body {
   font-family: "Red Hat Display", sans-serif;
+  font-size: clamp(12px, 2vw, 24px);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .app {
@@ -40,6 +44,10 @@ header {
 
 main {
   flex: 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 ul,
@@ -56,6 +64,23 @@ li {
   max-width: 100%;
   margin: 0 auto;
   padding: 1em;
+  margin-bottom: 2em;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25em;
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25em;
+  font-family: inherit;
+  transition: 0.25s ease-out;
+  transition-property: background-color transform;
+  user-select: none;
 }
 
 .piece {
@@ -71,22 +96,9 @@ li {
   button {
     --size: 1.5em;
     margin: 0.25em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: var(--size);
     height: var(--size);
-    padding: 0.25em;
-    background-color: rgba(255, 255, 255, 0.2);
-    outline: none;
-    border: none;
-    font-size: 1.3rem;
-    cursor: pointer;
-    border-radius: 0.25em;
-    font-family: inherit;
-    transition: 0.25s ease-out;
-    transition-property: background-color transform;
-    user-select: none;
+    font-size: 1.3em;
   }
 }
 
@@ -123,4 +135,13 @@ li {
   position: absolute;
   transform: translateX(-50%) scale(var(--scale));
   transition: transform 0.15s ease-in-out;
+}
+
+input[id="hot-cold-slider-toggle"] {
+  display: none;
+}
+
+.button-wrapper {
+  display: flex;
+  gap: 0.5em;
 }
