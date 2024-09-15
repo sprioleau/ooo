@@ -94,6 +94,7 @@ function generateGameBoard({
 
 export default function App() {
   const [points, setPoints] = useState(0);
+  const [isHotColdSliderVisible, setIsHotColdSliderVisible] = useState(false);
   const [{ board, size, solutionId }, setGameBoard] = useState(
     generateGameBoard({})
   );
@@ -155,7 +156,14 @@ export default function App() {
             </li>
           ))}
         </ul>
-        <HotColdSlider solutionId={solutionId} />
+        <button
+          onClick={() => {
+            setIsHotColdSliderVisible((previousState) => !previousState);
+          }}
+        >
+          {isHotColdSliderVisible ? "🙈 Hide" : "🐵 Show"} slider
+        </button>
+        {isHotColdSliderVisible && <HotColdSlider solutionId={solutionId} />}
       </main>
     </div>
   );

@@ -23,6 +23,7 @@ body {
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .app {
@@ -34,7 +35,6 @@ body {
   text-align: center;
   height: 100%;
   min-height: 100dvh;
-  aspect-ratio: 1 / 1;
   width: 100%;
 }
 
@@ -118,6 +118,7 @@ button {
 .hot-cold-slider {
   --height: 4px;
   margin: 4em;
+  width: 100%;
   position: relative;
   background: rgba(81, 0, 255, 0.3);
   height: var(--height);
