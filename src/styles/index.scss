@@ -120,13 +120,14 @@ button {
   margin: 4em;
   width: 100%;
   position: relative;
-  background: rgba(81, 0, 255, 0.3);
+  background-color: var(--track-color);
   height: var(--height);
   border-radius: var(--height);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transition: background-color 0.35s ease-in-out;
 }
 
 .temperature-symbol {
