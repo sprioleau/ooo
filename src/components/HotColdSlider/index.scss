@@ -1,0 +1,65 @@
+.hot-cold-slider {
+	--height: 4px;
+	width: 100%;
+	margin: 2em 1em;
+	position: relative;
+	background-color: var(--track-color);
+	height: var(--height);
+	border-radius: var(--height);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	transition: background-color 0.35s ease-in-out;
+}
+
+.temperature-symbol {
+	--size: 2em;
+	font-size: 2em;
+	left: var(--translateX);
+	position: absolute;
+	transform: translateX(-50%) scale(var(--scale));
+	transition: transform 0.15s ease-in-out;
+
+	&[data-temperature="🥶"] {
+		animation: shiver 0.15s ease-in-out infinite;
+	}
+
+	&[data-temperature="🔥"] {
+		animation: bounce 0.5s ease-in-out infinite;
+	}
+}
+
+input[id="hot-cold-slider-toggle"] {
+	display: none;
+}
+
+.button-wrapper {
+	display: flex;
+	gap: 0.5em;
+}
+
+.hot-cold-slider-button {
+	padding: 0.5em 1em;
+	font-size: 0.75em;
+}
+
+@keyframes shiver {
+	0%,
+	100% {
+		transform: rotate(-2deg) translateX(-2px);
+	}
+	50% {
+		transform: rotate(2deg) translateX(2px);
+	}
+}
+
+@keyframes bounce {
+	0%,
+	100% {
+		transform: scale(1.6) translateY(0);
+	}
+	50% {
+		transform: scale(1.8) translateY(-10px);
+	}
+}
