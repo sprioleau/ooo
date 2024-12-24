@@ -3,6 +3,7 @@ import HotColdSlider from "./components/HotColdSlider/HotColdSlider";
 import { generateGameBoard } from "./utils/gameUtils";
 import { PUZZLE_PAIRS } from "./constants";
 import ReactHowler from "react-howler";
+import Board from "./components/Board/Board";
 // import Logo from "./components/Logo/Logo";
 
 const MUSIC_SOURCES = {
@@ -48,43 +49,12 @@ export default function App() {
 				<p>Points: {points}</p>
 			</header>
 			<main>
-				<ul
-					className="pieces"
-					style={
-						{
-							"--columns": size,
-						} as React.CSSProperties
-					}
-				>
-					{board.map((piece) => (
-						<li
-							key={piece.id}
-							className="piece"
-							data-id={piece.id}
-							// style={{
-							// 	...(piece.isSolution && { backgroundColor: "rebeccapurple" }),
-							// }}
-						>
-							<button onClick={() => handleSelectPiece(piece)}>
-								<span
-									className="symbol"
-									style={
-										{
-											"--rotation-speed": 12 + Math.ceil(Math.random() * 5),
-											...(["i", "!"].includes(piece.symbol) && piece.isSolution && { fontFamily: "serif" }),
-											...(["6", "9"].includes(piece.symbol) && piece.isSolution && { fontFamily: "serif" }),
-										} as React.CSSProperties
-									}
-								>
-									{piece.symbol}
-								</span>
-							</button>
-						</li>
-					))}
-				</ul>
-				{/* <section className="hot-cold-slider-wrapper"> */}
+				<Board
+					board={board}
+					size={size}
+					onSelectPiece={handleSelectPiece}
+				/>
 				<HotColdSlider solutionId={solutionId} />
-				{/* </section> */}
 			</main>
 			<div className="sounds">
 				<ReactHowler

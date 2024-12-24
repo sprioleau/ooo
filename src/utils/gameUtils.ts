@@ -1,12 +1,12 @@
 import { PUZZLE_PAIRS } from "../constants";
 
-function getRandomPuzzleSize() {
-	const puzzleSizes = [
-		{ name: "small", size: 8 },
-		{ name: "medium", size: 10 },
-		{ name: "large", size: 12 },
-	];
+const PUZZLE_SIZES = [
+	{ name: "small", size: 8 },
+	{ name: "medium", size: 10 },
+	{ name: "large", size: 12 },
+];
 
+function getRandomPuzzleSize(puzzleSizes: typeof PUZZLE_SIZES) {
 	return pickRandomFromArray(puzzleSizes).value["size"];
 }
 
@@ -20,7 +20,7 @@ export function pickRandomFromArray<T>(array: T[]): { index: number; value: T } 
 
 export function generateGameBoard({
 	puzzlePairs,
-	size = getRandomPuzzleSize(),
+	size = getRandomPuzzleSize(PUZZLE_SIZES),
 }: {
 	puzzlePairs: typeof PUZZLE_PAIRS;
 	size?: number;
