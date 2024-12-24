@@ -106,7 +106,7 @@ export default function HotColdSlider({ solutionId }: { solutionId: number }) {
 	const symbol = CUTOFFS[temperature].SYMBOL;
 
 	return (
-		<>
+		<section className="hot-cold-slider-wrapper">
 			<button
 				className="hot-cold-slider-button"
 				onClick={() => {
@@ -116,29 +116,28 @@ export default function HotColdSlider({ solutionId }: { solutionId: number }) {
 				{isHotColdSliderVisible ? "🙈 Hide" : "🐵 Show"} slider
 			</button>
 
-			{isHotColdSliderVisible && (
+			<div
+				className="hot-cold-slider"
+				style={
+					{
+						"--track-color": CUTOFFS[temperature].COLOR,
+						"--opacity": isHotColdSliderVisible ? 1 : 0,
+					} as React.CSSProperties
+				}
+			>
 				<div
-					className="hot-cold-slider"
+					className="temperature-symbol"
 					style={
 						{
-							"--track-color": CUTOFFS[temperature].COLOR,
+							"--translateX": `${rangePercentageString}%`,
+							"--scale": scale,
 						} as React.CSSProperties
 					}
+					data-temperature={symbol}
 				>
-					<div
-						className="temperature-symbol"
-						style={
-							{
-								"--translateX": `${rangePercentageString}%`,
-								"--scale": scale,
-							} as React.CSSProperties
-						}
-						data-temperature={symbol}
-					>
-						{symbol}
-					</div>
+					{symbol}
 				</div>
-			)}
-		</>
+			</div>
+		</section>
 	);
 }

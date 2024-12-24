@@ -1,7 +1,15 @@
+.hot-cold-slider-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: min(100%, 400px);
+}
+
 .hot-cold-slider {
 	--height: 4px;
 	width: 100%;
 	margin: 2em 1em;
+	height: 4em;
 	position: relative;
 	background-color: var(--track-color);
 	height: var(--height);
@@ -10,7 +18,9 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	transition: background-color 0.35s ease-in-out;
+	opacity: var(--opacity);
+	transition: 0.15s ease-out;
+	transition-property: opacity, background-color;
 }
 
 .temperature-symbol {
@@ -23,6 +33,10 @@
 
 	&[data-temperature="🥶"] {
 		animation: shiver 0.15s ease-in-out infinite;
+	}
+
+	&[data-temperature="👍"] {
+		animation: shake 0.5s ease-in-out infinite;
 	}
 
 	&[data-temperature="🔥"] {
@@ -51,6 +65,16 @@ input[id="hot-cold-slider-toggle"] {
 	}
 	50% {
 		transform: rotate(2deg) translateX(2px);
+	}
+}
+
+@keyframes shake {
+	0%,
+	100% {
+		transform: rotate(10deg);
+	}
+	50% {
+		transform: rotate(3deg) scale(1.1) translate(-2px, -2px);
 	}
 }
 
