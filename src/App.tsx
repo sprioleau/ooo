@@ -62,10 +62,12 @@ export default function App() {
 				/>
 			</main>
 			<div className="sounds">
+				{/* @ts-expect-error 'ReactHowler' cannot be used as a JSX component */}
 				<ReactHowler
 					src="/sounds/correct.mp3"
 					playing={activeSoundSource !== undefined}
 				/>
+				{/* @ts-expect-error 'ReactHowler' cannot be used as a JSX component */}
 				<ReactHowler
 					src={activeMusicSource}
 					volume={0.4}
