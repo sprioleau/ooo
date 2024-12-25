@@ -3,12 +3,18 @@ import { generateGameBoard } from "../../utils/gameUtils";
 export default function Board({
 	board,
 	size,
+	ref,
 	onSelectPiece,
 }: {
 	board: ReturnType<typeof generateGameBoard>["board"];
 	size: number; // TODO: could be typed better
+	ref: React.RefObject<HTMLUListElement | null>;
 	onSelectPiece: (piece: ReturnType<typeof generateGameBoard>["board"][number]) => void;
 }) {
+	if (!ref) {
+		return null;
+	}
+
 	return (
 		<ul
 			className="pieces"
@@ -17,6 +23,7 @@ export default function Board({
 					"--columns": size,
 				} as React.CSSProperties
 			}
+			ref={ref}
 		>
 			{board.map((piece) => (
 				<li

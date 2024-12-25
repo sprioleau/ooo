@@ -8,11 +8,6 @@ type Position = {
 	y: number;
 };
 
-type SolutionPosition = Position & {
-	width: number;
-	height: number;
-};
-
 const CUTOFFS = {
 	LOW: {
 		SYMBOL: "🥶",
@@ -43,66 +38,103 @@ function getTemperatureFromDistance(rangePercentage: number): keyof typeof CUTOF
 	return "HIGH";
 }
 
-function getDistanceBetween(mousePosition: Position, solutionPosition: SolutionPosition) {
-	const dy = mousePosition.y - (solutionPosition.y + 0.5 * solutionPosition.height);
-	const dx = mousePosition.x - (solutionPosition.x + 0.5 * solutionPosition.width);
+function getDistanceBetween(mousePosition: Position, solutionPosition: Position) {
+	const dy = mousePosition.y - solutionPosition.y;
+	const dx = mousePosition.x - solutionPosition.x;
 
 	return Math.sqrt(Math.pow(dy, 2) + Math.pow(dx, 2));
 }
 
-export default function HotColdSlider({ solutionId }: { solutionId: number }) {
+export default function HotColdSlider({
+	solutionId,
+	ref,
+}: {
+	solutionId: number;
+	ref: React.RefObject<HTMLUListElement | null>;
+}) {
 	const [isHotColdSliderVisible, setIsHotColdSliderVisible] = useState(false);
-	const [solutionPosition, setSolutionPosition] = useState<{
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-	} | null>(null);
+	const [maxDistanceFromCorners, setMaxDistanceFromCorners] = useState<number | null>(null);
+	const [distanceFromMousePointer, setDistanceFromMousePointer] = useState<number | null>(null);
 	const { x: mouseX, y: mouseY } = useMousePosition();
-	const minimumWindowDimension = Math.min(innerWidth, innerHeight);
 
 	useEffect(() => {
-		// TODO: Use a ref instead
-		const solutionElement = document.querySelector(`[data-id="${solutionId}"]`) as HTMLLIElement;
+		if (!ref.current) {
+			return;
+		}
 
-		if (!solutionElement) return;
+		const board = ref.current;
+		const solutionElement = board.querySelector(`[data-id="${solutionId}"]`) as HTMLLIElement;
+
+		if (!solutionElement) {
+			return;
+		}
 
 		const { left, top, width, height } = solutionElement.getBoundingClientRect();
 
-		const center = {
+		const solutionElementCenter = {
 			x: left + 0.5 * width,
 			y: top + 0.5 * height,
-			width,
-			height,
 		};
 
-		setSolutionPosition(center);
-	}, [solutionId]);
+		// ---
 
-	const canCalulateDistance = solutionPosition && mouseX && mouseY;
+		const canCalulateDistance = mouseX && mouseY;
 
-	const distance = canCalulateDistance
-		? getDistanceBetween(
-				{
-					x: mouseX,
-					y: mouseY,
-				},
-				{
-					x: solutionPosition.x,
-					y: solutionPosition.y,
-					width: solutionPosition.width,
-					height: solutionPosition.height,
-				}
-		  )
-		: 0;
+		const distanceFromSolution = canCalulateDistance
+			? getDistanceBetween(
+					{
+						x: mouseX,
+						y: mouseY,
+					},
+					{
+						x: solutionElementCenter.x,
+						y: solutionElementCenter.y,
+					}
+			  )
+			: 0;
 
-	const maxDistance = minimumWindowDimension;
-	const rangeValue = (maxDistance - distance).toFixed(1);
-	const rangePercentage = (100 * (maxDistance - distance)) / maxDistance;
+		const {
+			left: boardLeft,
+			top: boardTop,
+			width: boardWidth,
+			height: boardHeight,
+		} = ref.current.getBoundingClientRect();
+
+		/*
+			Max distance is the distance from the solution to the furthest 
+			corner of the board.
+				1. Calculate the distance from the solution to each corner
+				2. Find the maximum
+		*/
+		const corners = [
+			{ x: boardLeft, y: boardTop },
+			{ x: boardLeft + boardWidth, y: boardTop },
+			{ x: boardLeft, y: boardTop + boardHeight },
+			{ x: boardLeft + boardWidth, y: boardTop + boardHeight },
+		];
+
+		const distanceFromCorners = corners.map(({ x, y }) => {
+			const dx = solutionElementCenter.x - x;
+			const dy = solutionElementCenter.y - y;
+			return Math.sqrt(Math.pow(dy, 2) + Math.pow(dx, 2));
+		});
+
+		const computedMaxDistanceFromCorners = Math.max(...distanceFromCorners);
+
+		setMaxDistanceFromCorners(computedMaxDistanceFromCorners);
+		setDistanceFromMousePointer(Math.min(computedMaxDistanceFromCorners, distanceFromSolution));
+	}, [ref, solutionId, mouseX, mouseY]);
+
+	if (!maxDistanceFromCorners || !distanceFromMousePointer) {
+		return null;
+	}
+
+	const range = maxDistanceFromCorners - distanceFromMousePointer;
+	const rangePercentage = (100 * range) / maxDistanceFromCorners;
 	const rangePercentageString = rangePercentage.toFixed(1);
 	const temperature = getTemperatureFromDistance(rangePercentage);
 	const scaleFactor = 0.75;
-	const scale = (1 + (Number(rangeValue) / maxDistance) * scaleFactor).toFixed(1);
+	const scale = (1 + (range / maxDistanceFromCorners) * scaleFactor).toFixed(1);
 	const symbol = CUTOFFS[temperature].SYMBOL;
 
 	return (

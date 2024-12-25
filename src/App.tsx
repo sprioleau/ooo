@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import HotColdSlider from "./components/HotColdSlider/HotColdSlider";
 import { generateGameBoard } from "./utils/gameUtils";
 import { PUZZLE_PAIRS } from "./constants";
@@ -19,6 +19,7 @@ export default function App() {
 	const [points, setPoints] = useState(0);
 	const [activeSoundSource, setActiveSoundSource] = useState<(typeof SOUNDS)[keyof typeof SOUNDS] | undefined>();
 	const [activeMusicSource] = useState(MUSIC_SOURCES.GAME);
+	const boardRef = useRef<HTMLUListElement>(null);
 
 	const [{ board, size, solutionId, pairIndex }, setGameBoard] = useState(
 		generateGameBoard({
@@ -53,8 +54,12 @@ export default function App() {
 					board={board}
 					size={size}
 					onSelectPiece={handleSelectPiece}
+					ref={boardRef}
 				/>
-				<HotColdSlider solutionId={solutionId} />
+				<HotColdSlider
+					solutionId={solutionId}
+					ref={boardRef}
+				/>
 			</main>
 			<div className="sounds">
 				<ReactHowler
